@@ -25,7 +25,8 @@ public class Field {
         return field;
     }
 
-    public int getEmptyFieldIndex() {
+    public int getEmptyFieldIndex()  {
+
         return field.entrySet().stream()
                 .filter(e -> e.getValue() == Sign.EMPTY)
                 .map(Map.Entry::getKey)
