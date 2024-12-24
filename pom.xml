@@ -17,6 +17,7 @@
     </properties>
 
     <dependencies>
+        <!-- Servlet API (для тестирования сервлетов) -->
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
@@ -35,6 +36,45 @@
                     <version>1.18.32</version>
                     <scope>provided</scope>
                 </dependency>
+
+            <!-- JUnit 5 -->
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter</artifactId>
+                <version>5.8.2</version>
+                <scope>test</scope>
+            </dependency>
+
+            <!-- Mockito для создания моков -->
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>4.0.0</version>
+                <scope>test</scope>
+            </dependency>
+
+            <!-- Mockito для интеграции с JUnit 5 -->
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-junit-jupiter</artifactId>
+                <version>4.0.0</version>
+                <scope>test</scope>
+            </dependency>
+
+
+
+
+            <!-- Для работы с JUnit 5 и Mockito -->
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter-engine</artifactId>
+                <version>5.8.2</version>
+                <scope>test</scope>
+            </dependency>
+
+
+
+
     </dependencies>
 
     <build>

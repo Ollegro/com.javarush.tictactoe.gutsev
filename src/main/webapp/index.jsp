@@ -1,3 +1,4 @@
+<%--@elvariable id="data" type="InitServletTest"--%>
 <%@ page import="com.tictactoe.Sign" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
@@ -36,6 +37,7 @@
 <c:set var="CROSSES" value="<%=Sign.CROSS%>"/>
 <c:set var="NOUGHTS" value="<%=Sign.NOUGHT%>"/>
 
+<%--@elvariable id="winner" type="InitServletTest"--%>
 <c:if test="${winner == CROSSES}">
     <h1 style="text-align: center">Крестики выйграли!</h1>
     <button onclick="restart()">Начать сначала</button>
@@ -44,6 +46,7 @@
     <h1 style="text-align: center">Нолики выйграли!</h1>
     <button onclick="restart()">Начать сначала</button>
 </c:if>
+<%--@elvariable id="draw" type="InitServletTest"--%>
 <c:if test="${draw}">
     <h1 style="text-align: center">НИЧЬЯ!</h1>
     <button onclick="restart()">Начать сначала</button>

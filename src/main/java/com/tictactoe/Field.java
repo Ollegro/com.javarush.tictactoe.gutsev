@@ -1,10 +1,16 @@
 package com.tictactoe;
 
+
+
+import lombok.Getter;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+
+@Getter
 public class Field {
     private final Map<Integer, Sign> field;
 
@@ -21,10 +27,6 @@ public class Field {
         field.put(8, Sign.EMPTY);
     }
 
-    public Map<Integer, Sign> getField() {
-        return field;
-    }
-
     public int getEmptyFieldIndex()  {
 
         return field.entrySet().stream()
@@ -39,6 +41,7 @@ public class Field {
                 .map(Map.Entry::getValue)
                 .collect(Collectors.toList());
     }
+
 
     public Sign checkWin() {
         List<List<Integer>> winPossibilities = List.of(

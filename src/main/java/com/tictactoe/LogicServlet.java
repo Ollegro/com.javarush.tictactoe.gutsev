@@ -3,6 +3,7 @@ package com.tictactoe;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
+
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,17 +15,14 @@ import java.util.List;
 public class LogicServlet extends HttpServlet {
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    public void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         // Получаем текущую сессию
         HttpSession currentSession = req.getSession();
-
         // Получаем объект игрового поля из сессии
         Field field = extractField(currentSession);
-
         // получаем индекс ячейки, по которой произошел клик
         int index = getSelectedIndex(req);
         Sign currentSign = field.getField().get(index);
-
         // Проверяем, что ячейка, по которой был клик пустая.
         // Иначе ничего не делаем и отправляем пользователя на ту же страницу без изменений
         // параметров в сессии
@@ -33,26 +31,20 @@ public class LogicServlet extends HttpServlet {
             dispatcher.forward(req, resp);
             return;
         }
-
         // ставим крестик в ячейке, по которой кликнул пользователь
         field.getField().put(index, Sign.CROSS);
-
-
         // Проверяем, не победил ли крестик после добавление последнего клика пользователя
-        if (checkWin(resp, currentSession, field)) {
+        if (checkWinner(resp, currentSession, field)) {
             return;
         }
-
         // Получаем пустую ячейку поля
         int emptyFieldIndex = 0;
-
-            emptyFieldIndex = field.getEmptyFieldIndex();
-
+        emptyFieldIndex = field.getEmptyFieldIndex();
 
         if (emptyFieldIndex >= 0) {
             field.getField().put(emptyFieldIndex, Sign.NOUGHT);
             // Проверяем, не победил ли нолик после добавление последнего нолика
-            if (checkWin(resp, currentSession, field)) {
+            if (checkWinner(resp, currentSession, field)) {
                 return;
             }
         }
@@ -86,7 +78,7 @@ public class LogicServlet extends HttpServlet {
      * Метод проверяет, нет ли трех крестиков/ноликов в ряд.
      * Возвращает true/false
      */
-    private boolean checkWin(HttpServletResponse response, HttpSession currentSession, Field field) throws IOException {
+    private boolean checkWinner(HttpServletResponse response, HttpSession currentSession, Field field) throws IOException {
         Sign winner = field.checkWin();
         if (Sign.CROSS == winner || Sign.NOUGHT == winner) {
             // Добавляем флаг, который показывает что кто-то победил
@@ -112,12 +104,19 @@ public class LogicServlet extends HttpServlet {
         return isNumeric ? Integer.parseInt(click) : 0;
     }
 
+
+
     private Field extractField(HttpSession currentSession) {
         Object fieldAttribute = currentSession.getAttribute("field");
-        if (Field.class != fieldAttribute.getClass()) {
+
+        if (!(fieldAttribute instanceof Field)) {
             currentSession.invalidate();
-            throw new RuntimeException("Session is broken, try one more time");
+            throw new RuntimeException("Session is broken: expected 'field' attribute of type Field, but got " +
+                    (fieldAttribute != null ? fieldAttribute.getClass().getName() : "null"));
         }
+
         return (Field) fieldAttribute;
     }
+
+
 }
