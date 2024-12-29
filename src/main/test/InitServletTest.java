@@ -11,7 +11,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -24,8 +23,6 @@ class InitServletTest {
     private HttpServletResponse response;
     private HttpSession session;
     private ServletContext servletContext;
-    private ServletConfig servletConfig;
-    private RequestDispatcher requestDispatcher;
 
     @BeforeEach
     void setUp() throws ServletException {
@@ -34,8 +31,8 @@ class InitServletTest {
         response = mock(HttpServletResponse.class);
         session = mock(HttpSession.class);
         servletContext = mock(ServletContext.class);
-        servletConfig = mock(ServletConfig.class);
-        requestDispatcher = mock(RequestDispatcher.class);
+        ServletConfig servletConfig = mock(ServletConfig.class);
+        RequestDispatcher requestDispatcher = mock(RequestDispatcher.class);
 
         // Настройка мока для сессии
         when(request.getSession(true)).thenReturn(session);

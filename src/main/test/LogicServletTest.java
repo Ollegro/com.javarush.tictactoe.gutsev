@@ -1,5 +1,4 @@
 import com.tictactoe.Field;
-import com.tictactoe.InitServlet;
 import com.tictactoe.LogicServlet;
 import com.tictactoe.Sign;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,9 +14,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
@@ -81,37 +80,45 @@ public class LogicServletTest {
     }
 
 
-@Test
-public void testDoGet_Draw_ShouldSetDrawAttributeAndRedirect() throws ServletException, IOException {
-    // Arrange
-    Field field = mock(Field.class);
-    // Настраиваем поведение мока для ничьей
-    when(field.getField()).thenReturn(Map.of(
-            0, Sign.CROSS,
-            1, Sign.NOUGHT,
-            2, Sign.CROSS,
-            3, Sign.NOUGHT,
-            4, Sign.CROSS,
-            5, Sign.NOUGHT,
-            6, Sign.CROSS,
-            7, Sign.NOUGHT,
-            8, Sign.CROSS
-    ));
-    session.setAttribute("draw", true); // Изначально false
-    response.sendRedirect("/index.jsp");
+    @Test
+    public void testDoGet_Draw_ShouldSetDrawAttributeAndRedirect() throws ServletException, IOException {
+        // Arrange
+        Field field = mock(Field.class); // Мок объекта Field
 
+        // Настраиваем поведение мока для поля: изменяемая карта
+        when(field.getField()).thenReturn(new HashMap<>(Map.of(
+                0, Sign.EMPTY, // Ячейка 0 пуста
+                1, Sign.NOUGHT,
+                2, Sign.CROSS,
+                3, Sign.NOUGHT,
+                4, Sign.CROSS,
+                5, Sign.NOUGHT,
+                6, Sign.CROSS,
+                7, Sign.NOUGHT,
+                8, Sign.CROSS
+        )));
 
+        // Настраиваем моки для методов Field
+        when(field.getEmptyFieldIndex()).thenReturn(-1); // Нет пустых ячеек после хода
+        when(field.checkWin()).thenReturn(Sign.EMPTY); // Победителя нет
+        when(field.getFieldData()).thenReturn(List.of(
+                Sign.CROSS, Sign.NOUGHT, Sign.CROSS,
+                Sign.NOUGHT, Sign.CROSS, Sign.NOUGHT,
+                Sign.CROSS, Sign.NOUGHT, Sign.CROSS
+        ));
 
-    when(session.getAttribute("field")).thenReturn(field);
-    when(request.getParameter("click")).thenReturn("0"); // Игрок делает ход
+        // Настраиваем моки сессии и запроса
+        when(session.getAttribute("field")).thenReturn(field);
+        when(request.getParameter("click")).thenReturn("0"); // Игрок делает ход по пустой ячейке
 
-    // Act
-    logicServlet.doGet(request, response);
+        // Act
+        logicServlet.doGet(request, response);
 
-    // Assert
-    verify(session).setAttribute("draw", true); // Проверяем, что атрибут был установлен на true
-    verify(response).sendRedirect("/index.jsp"); // Проверяем, что произошел редирект
-}
+        // Assert
+        verify(session).setAttribute("draw", true); // Проверяем, что атрибут был установлен
+        verify(session).setAttribute(eq("data"), any()); // Проверяем, что данные обновлены
+        verify(response).sendRedirect("/index.jsp"); // Проверяем, что произошел редирект
+    }
 
 
 
